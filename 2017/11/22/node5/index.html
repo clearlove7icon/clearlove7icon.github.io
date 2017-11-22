@@ -1,0 +1,326 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>node5 | Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="John Doe">
+    
+    <meta name="description" content="node防止重复登陆如果需要防止重复登陆的话，需要做很多处理，我们可以把用户的登陆状态存在某一个地方，每次登陆的时候做一个验证，当用户注销登陆的时候再进行修改
+但是有的时候用户不会乖乖的点击退出之后关闭页面，而是直接关闭页面，这个时候无论是前端还是后端都无法检测，一般这样的功能也不会实现，如果需要做">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Hexo" title="Hexo"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2017/11/22/node5/" title="node5" itemprop="url">node5</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="John Doe">John Doe</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-11-22T04:17:37.000Z" itemprop="datePublished">2017-11-22</time>
+    Updated:<time datetime="2017-11-22T04:18:11.446Z" itemprop="dateModified">2017-11-22</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#node防止重复登陆"><span class="toc-number">1.</span> <span class="toc-text">node防止重复登陆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#H5本地存储"><span class="toc-number">2.</span> <span class="toc-text">H5本地存储</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#cookie与webStorage的区别"><span class="toc-number">2.0.1.</span> <span class="toc-text">cookie与webStorage的区别</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#webStorage包含的存储方式"><span class="toc-number">2.0.2.</span> <span class="toc-text">webStorage包含的存储方式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#localStorage和sessionStorage-的使用方法（API）"><span class="toc-number">2.0.3.</span> <span class="toc-text">localStorage和sessionStorage 的使用方法（API）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BootStrap-的入门使用"><span class="toc-number">3.</span> <span class="toc-text">BootStrap 的入门使用</span></a></li></ol>
+		</div>
+		
+		<h3 id="node防止重复登陆"><a href="#node防止重复登陆" class="headerlink" title="node防止重复登陆"></a>node防止重复登陆</h3><p>如果需要防止重复登陆的话，需要做很多处理，我们可以把用户的登陆状态存在某一个地方，每次登陆的时候做一个验证，当用户注销登陆的时候再进行修改</p>
+<p>但是有的时候用户不会乖乖的点击退出之后关闭页面，而是直接关闭页面，这个时候无论是前端还是后端都无法检测，一般这样的功能也不会实现，如果需要做处理的话</p>
+<p>后端监听接口的调用，如果某用户在一定时间内没有调用接口 ，就默认的给他下线。</p>
+<hr>
+<h3 id="H5本地存储"><a href="#H5本地存储" class="headerlink" title="H5本地存储"></a>H5本地存储</h3><p>在以前，我们想要存储一些数据，并且只是在前端使用，服务端并不会使用，我们只能存在cookie里，但是cookie会跟随请求头在客户端和服务端之间来回传递，而且cookie还有一些缺点，H5提供了webStorage的API用来做客户端的数据存储</p>
+<h5 id="cookie与webStorage的区别"><a href="#cookie与webStorage的区别" class="headerlink" title="cookie与webStorage的区别"></a>cookie与webStorage的区别</h5><ol>
+<li>cookie有大小的限制，只能存储4kb，webStorage可以存储5Mb，cookie还有条数的限制</li>
+<li>cookie会跟随请求头在客户端和服务端之间传递，会影响带宽。</li>
+<li>cookie需要设置有效期，localStorage是永久保存，sessionStorage是会话保存，</li>
+<li>cookie可以设置作用path</li>
+<li>cookie的操作较为困难，webStorage的API较为容易</li>
+<li>cookie的兼容性比webStorage兼容性好</li>
+</ol>
+<h5 id="webStorage包含的存储方式"><a href="#webStorage包含的存储方式" class="headerlink" title="webStorage包含的存储方式"></a>webStorage包含的存储方式</h5><ol>
+<li>localStorage ：有效期是永远，永久保存；除非手动删除</li>
+<li>sessionStorage： 有效期是一次会话时间</li>
+<li>globalStorage、indexedDB、webSQL因为兼容性、实用性较差，所以，不使用</li>
+</ol>
+<h5 id="localStorage和sessionStorage-的使用方法（API）"><a href="#localStorage和sessionStorage-的使用方法（API）" class="headerlink" title="localStorage和sessionStorage 的使用方法（API）"></a>localStorage和sessionStorage 的使用方法（API）</h5><ol>
+<li><p>localStorage和sessionStorage的使用方法一样</p>
+</li>
+<li><p>增删改查</p>
+</li>
+</ol>
+<p>增/改： localStorage.setItem(key,value)/ localStorage.a = 1</p>
+<p>查： length；key方法（index）得到对应的key  getItem(key)/localStorage.a</p>
+<p>删： removeItem（key）</p>
+<p>清空: clear()</p>
+<hr>
+<h3 id="BootStrap-的入门使用"><a href="#BootStrap-的入门使用" class="headerlink" title="BootStrap 的入门使用"></a>BootStrap 的入门使用</h3><p>在做前端开发中，其实有百分之四十的时间用来布局写样式，百分之三十用来写JS逻辑交互，百分之三十时间用来测试调bug，可以看的到的是，用在布局+样式的时候会比较多，</p>
+<p>所以会有很多的前端框架诞生，例如bootstrap</p>
+<p>前端框架包含有设定好的html布局结构，css样式，一些js效果，理论上将，不需要写一行代码，只需复制粘贴就可以实现一个静态页面</p>
+<p>官方不要脸的介绍：简洁、直观、强悍的前端开发框架，让web开发更迅速、简单。</p>
+<p>用bootstrap不仅可以写PC的页面，还可以做响应式</p>
+<p>响应式：利用媒体查询等技术，通过检测浏览器的尺寸不同，来显示不同的布局结构，原理就是，媒体查询可以检测到屏幕的尺寸是否处于某一个范围，如果是的时候可以让某一段css代码起作用，来实现结构切换</p>
+<p>boot 默认的将屏幕划分成了四种：</p>
+<p>0-768 xs ;768-992 sm ; 992-1200 md;1200- lg ;</p>
+<p>boot 提供了两个布局容器，这两个布局容器是要作为某一个大的区域的最外层元素的，会和其他的一些布局类名配合使用</p>
+<p>.container   .container-fluid</p>
+<p>container-fluid在任意屏幕下宽度都是百分之一百</p>
+<p>container 是在xs屏永远都是100%；768-992，宽度：768；992-1200，宽度：992；1200- 宽度：1200，永远居中</p>
+<p>boot 提供了栅格系统（12栅格化，网格化，网格系统）会让我们在布局的时候，想象着将一行的空间分成12份，通过设置每一个元素占几份来控制元素的排列</p>
+<p>row类名可以在容器中将某一行分成12份</p>
+<p>col-type-num 可以确定某一行中的某一个元素在type屏幕的情况下占num份</p>
+<p>注意，在使用这些类名的时候有小屏优先这样的原则:</p>
+<p>在写媒体查询样式的时候，应该先写小屏的样式，再写大屏的样式，小屏解析的css代码会较少，性能较高</p>
+<p>col-type-offset-num 设定的是某一个元素在某一个屏幕尺寸下向右偏移几份</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2017/11/22/node5/" data-title="node5 | Hexo" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2017/11/22/node4/"  title="node4">
+ <strong>NEXT:</strong><br/> 
+ <span>node4
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#node防止重复登陆"><span class="toc-number">1.</span> <span class="toc-text">node防止重复登陆</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#H5本地存储"><span class="toc-number">2.</span> <span class="toc-text">H5本地存储</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#cookie与webStorage的区别"><span class="toc-number">2.0.1.</span> <span class="toc-text">cookie与webStorage的区别</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#webStorage包含的存储方式"><span class="toc-number">2.0.2.</span> <span class="toc-text">webStorage包含的存储方式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#localStorage和sessionStorage-的使用方法（API）"><span class="toc-number">2.0.3.</span> <span class="toc-text">localStorage和sessionStorage 的使用方法（API）</span></a></li></ol></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#BootStrap-的入门使用"><span class="toc-number">3.</span> <span class="toc-text">BootStrap 的入门使用</span></a></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2017 
+		
+		<a href="http://yoursite.com" target="_blank" title="John Doe">John Doe</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>
