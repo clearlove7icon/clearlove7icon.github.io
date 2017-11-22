@@ -1,0 +1,332 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>node4 | Hexo</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
+    
+    <meta name="author" content="John Doe">
+    
+    <meta name="description" content="node第五课使用EXPRESS+MONGODB+EJS+BOOTSTRAP实现一个小型电商网站
+功能实现（主要技术点）
+登陆注册、登陆信息判断
+
+轮播图
+ 使用服务端渲染的方式，因为轮播部分在用户使用过程中不会出现再次操作数据的情况，初始化的时候显示就可以。
+ 后端接收到请求首页后，获取轮播图数据">
+    
+    
+    
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/pacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/pacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+
+  <body>
+    <header>
+      <div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.svg" alt="Hexo" title="Hexo"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="Hexo">Hexo</a></h1>
+				<h2 class="blog-motto"></h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="Menu">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+					<li>
+					
+					<form class="search" action="//google.com/search" method="get" accept-charset="utf-8">
+						<label>Search</label>
+						<input type="text" id="search" name="q" autocomplete="off" maxlength="20" placeholder="Search" />
+						<input type="hidden" name="q" value="site:yoursite.com">
+					</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2017/11/22/node4/" title="node4" itemprop="url">node4</a>
+  </h1>
+  <p class="article-author">By
+    
+      <a href="http://yoursite.com" title="John Doe">John Doe</a>
+    </p>
+  <p class="article-time">
+    <time datetime="2017-11-22T04:14:27.000Z" itemprop="datePublished">2017-11-22</time>
+    Updated:<time datetime="2017-11-22T04:14:49.630Z" itemprop="dateModified">2017-11-22</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">Contents</strong>
+		<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#node第五课"><span class="toc-number">1.</span> <span class="toc-text">node第五课</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#功能实现（主要技术点）"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">功能实现（主要技术点）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ejs模板语法："><span class="toc-number">1.0.0.2.</span> <span class="toc-text">ejs模板语法：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#回流和重绘"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">回流和重绘</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#数据缓存"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">数据缓存</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#JS中正则加变量："><span class="toc-number">1.0.0.5.</span> <span class="toc-text">JS中正则加变量：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#在mongodb中根据-id主键来查找数据"><span class="toc-number">1.0.0.6.</span> <span class="toc-text">在mongodb中根据_id主键来查找数据</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#CSS3动画复习"><span class="toc-number">1.0.0.7.</span> <span class="toc-text">CSS3动画复习</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#利用cookie来进行前后端数据交互"><span class="toc-number">1.0.0.8.</span> <span class="toc-text">利用cookie来进行前后端数据交互</span></a></li></ol></li></ol></li></ol></li></ol>
+		</div>
+		
+		<h2 id="node第五课"><a href="#node第五课" class="headerlink" title="node第五课"></a>node第五课</h2><p>使用EXPRESS+MONGODB+EJS+BOOTSTRAP实现一个小型电商网站</p>
+<h5 id="功能实现（主要技术点）"><a href="#功能实现（主要技术点）" class="headerlink" title="功能实现（主要技术点）"></a>功能实现（主要技术点）</h5><ol>
+<li><p>登陆注册、登陆信息判断</p>
+</li>
+<li><p>轮播图</p>
+<p> 使用服务端渲染的方式，因为轮播部分在用户使用过程中不会出现再次操作数据的情况，初始化的时候显示就可以。</p>
+<p> 后端接收到请求首页后，获取轮播图数据，然后在渲染ejs，模板的时候将数据载入</p>
+ <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">// node router...</span><br><span class="line">connect_mongo((db)=&gt;&#123;//连接数据库</span><br><span class="line">    db.collection(&apos;banner&apos;).find(&#123;&#125;).toArray((err,results)=&gt;&#123;//查找数据</span><br><span class="line">    if(err) throw err;</span><br><span class="line">    res.render(&apos;index&apos;, &#123;banners:results&#125;);//渲染模板</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;)</span><br><span class="line">// ejs...</span><br><span class="line">&lt;% banners.forEach((item,i)=&gt;&#123; %&gt;</span><br><span class="line">    &lt;li data-target=&quot;#carousel-example-generic&quot; class=&quot;&lt;%= i==0?&apos;active&apos;:&apos;&apos; %&gt;&quot; data-slide-to=&quot;&lt;%= i %&gt;&quot;&gt;&lt;/li&gt;</span><br><span class="line">&lt;% &#125;) %&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h5 id="ejs模板语法："><a href="#ejs模板语法：" class="headerlink" title="ejs模板语法："></a>ejs模板语法：</h5><ol>
+<li>所有ejs语句都要用 &lt;% %&gt;来包裹，类似于php中的 &lt;?php ?&gt;</li>
+<li>输出内容用 &lt;%= value %&gt;</li>
+<li>输出内容需要解析成html，使用 &lt;%- %&gt;,在很多时候，数据库里存储的数据很可能是一个标签格式的字符串，需要使用这种方式来渲染</li>
+<li>在一个ejs模板里可以引入另一个ejs模板  &lt;%= include(url) %&gt;</li>
+</ol>
+<h5 id="回流和重绘"><a href="#回流和重绘" class="headerlink" title="回流和重绘"></a>回流和重绘</h5><p>回流和重绘是在前端开发中浏览器经常出现的一种情况</p>
+<p>回流：当我们使用js等方法来动态改变页面中某一个元素的宽高、大小、浮动等等操作的时候（更改了文档流结构的时候）<br>重绘：当我们使用js等方法来动态改变页面中某一个元素的背景颜色、color等等操作的时候(没有更改大的dom文档结构),</p>
+<p>避免回流</p>
+<p>能visibility：none就不要dispaly：none</p>
+<h5 id="数据缓存"><a href="#数据缓存" class="headerlink" title="数据缓存"></a>数据缓存</h5><p>当用户来回的在多个页内标签页间切换的时候，会持续的产生数据请求，而请求的数据很可能是和之前请求到的是一样的，所以我们可以做一个缓存机制，当一次获取数据后将获取到的数据存在一个变量、cookie中，每次产生用户操作后都去判断缓存是否存在，如果存在的话就直接使用，否则重新获取并存人缓存，需要注意的是，为缓存做一个生命周期，定期销毁，保证当有新数据的时候也可以请求到。</p>
+<h5 id="JS中正则加变量："><a href="#JS中正则加变量：" class="headerlink" title="JS中正则加变量："></a>JS中正则加变量：</h5><p>正则字面量(/ /)加变量不像字符串拼接变量那么简单，因为无论你怎么写，都会被当作正则的一部分来处理。</p>
+<p>可以用构造函数来生成正则表达式：</p>
+<p>ew RegExp(“^\d+” + v + “$”,”gim”);</p>
+<h5 id="在mongodb中根据-id主键来查找数据"><a href="#在mongodb中根据-id主键来查找数据" class="headerlink" title="在mongodb中根据_id主键来查找数据"></a>在mongodb中根据_id主键来查找数据</h5><p>mongodb在存储数据的时候会自动的为每一个document生成一个_id主键，我们在nodeJS中根据_id查找的时候要注意一点，不能直接：</p>
+<p>let _id = ‘5a0bc041bf680d5ee434683d’<br>coll.find({_id:_id})</p>
+<p>需要从mongodb模块中引入ObjectID方法，这个方法可以将上面的字符串转成mongodb数据库可以识别的_id数据类型</p>
+<p>var ObjectID = require(“mongodb”).ObjectID<br>let _id = ‘5a0bc041bf680d5ee434683d’<br>coll.find({_id:ObjectID(_id)})</p>
+<h5 id="CSS3动画复习"><a href="#CSS3动画复习" class="headerlink" title="CSS3动画复习"></a>CSS3动画复习</h5><ol>
+<li><p>CSS3动画在移动端或者兼容要求不高的项目中应该大量使用，因为CSS3动画的性能更高，渲染更流畅，功能性更强</p>
+</li>
+<li><p>在使用动画前应该先利用@keyframes name定义动画,括号里可以写百分百或者from to,可以将整个动画运行的时间看成时间轴，在对应的时间节点变化成不同的css属性</p>
+</li>
+<li><p>在css中利用animation属性来使用已经定义好的动画，最少需要加上动画名字和持续时间的属性</p>
+</li>
+</ol>
+<p>在这里使用animate.css动画库</p>
+<p>需要添加animated类型，这样元素有了动画执行时间，在加上对应的动画类名，就会拥有执行的动画名字</p>
+<p>注意如果需要动画在用户操作后重新执行动画，需要将类名去掉再加上，这个时候浏览器可能反应不过来，加一个setTimeout,0;</p>
+<p>还可以使用animationEnd的事件，在动画执行完成后触发</p>
+<h5 id="利用cookie来进行前后端数据交互"><a href="#利用cookie来进行前后端数据交互" class="headerlink" title="利用cookie来进行前后端数据交互"></a>利用cookie来进行前后端数据交互</h5><p>有的时候，前端在请求数据之前会将相关参数存在cookie里，然后后端根据请求头中携带的cookie信息来判断做出不同的响应</p>
+<hr>
+<p>分类： 手机 1  衣服 2   书 3</p>
+<p>goods</p>
+<p>db.goods.insertMany([{keyword:”华为 7X 7x huawei 华为7X”,name:”华为7X”,”price”:1820,imgurl:”/images/goods/phone/hw-7x-1820.jpg”,classid:1,hot:1658},{keyword:”华为 V8 v8 huawei 华为V8”,name:”华为V8”,”price”:1699,imgurl:”/images/goods/phone/hw-v8-1699.jpg”,classid:1,hot:9864},<br>{keyword:”苹果 apple iphone i8 iphone 8Plus”,name:”iphone 8Plus”,”price”:6088,imgurl:”/images/goods/phone/ip-8p-6088.jpg”,classid:1,hot:4596},<br>{keyword:”锤子 坚果 pro 锤子坚果pro”,name:”锤子坚果pro”,”price”:1499,imgurl:”/images/goods/phone/jg-pro-1499.jpg”,classid:1,hot:9654},<br>{keyword:”oppo r11 R11 oppoR11S”,name:”oppoR11S”,”price”:2999,imgurl:”/images/goods/phone/op-r11-2999.jpg”,classid:1,hot:865},<br>{keyword:”mi MI 小米 note note3 小米note3”,name:”小米note3”,”price”:2099,imgurl:”/images/goods/phone/xm-n3-2099.jpg”,classid:1,hot:4986},<br>{keyword:”棉袄 白 白棉袄”,name:”白棉袄”,”price”:249,imgurl:”/images/goods/clothes/1.jpg”,classid:2,hot:896},<br>{keyword:”棉袄 黑 黑棉袄”,name:”黑棉袄”,”price”:299,imgurl:”/images/goods/clothes/2.jpg”,classid:2,hot:1468},<br>{keyword:”棉袄 蓝 蓝棉袄”,name:”蓝棉袄”,”price”:589,imgurl:”/images/goods/clothes/3.jpg”,classid:2,hot:542},<br>{keyword:”夹克 黑 黑夹克”,name:”黑夹克”,”price”:199,imgurl:”/images/goods/clothes/4.jpg”,classid:2,hot:863},<br>{keyword:”T恤 黑 白 黑白T恤”,name:”黑白T恤”,”price”:99,imgurl:”/images/goods/clothes/5.jpg”,classid:2,hot:4561},<br>{keyword:”颠覆者 颠覆 书”,name:”颠覆者”,”price”:35,imgurl:”/images/goods/book/dfz.jpg”,classid:3,hot:156},<br>{keyword:”全球通史 全球 书”,name:”全球通史”,”price”:20,imgurl:”/images/goods/book/qqts.jpg”,classid:3,hot:25},<br>{keyword:”世界简史 世界 书”,name:”世界简史”,”price”:156,imgurl:”/images/goods/book/sjjs.jpg”,classid:3,hot:265},<br>{keyword:”行为心理学 行为 书”,name:”行为心理学”,”price”:33,imgurl:”/images/goods/book/xwxlx.jpg”,classid:3,hot:126},<br>{keyword:”美术入门 美术 书”,name:”美术入门”,”price”:155,imgurl:”/images/goods/book/msrm.jpg”,classid:3,hot:565}])</p>
+<p>// cars<br>[</p>
+<pre><code>{uid,goods:[{goodid,num}]}
+</code></pre><p>]</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+
+
+
+
+<div class="article-share" id="share">
+
+  <div data-url="http://yoursite.com/2017/11/22/node4/" data-title="node4 | Hexo" data-tsina="" class="share clearfix">
+  </div>
+
+</div>
+</footer>   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2017/11/22/node3/"  title="node3">
+ <strong>NEXT:</strong><br/> 
+ <span>node3
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="Show Sidebar"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">Contents</strong>
+  <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#node第五课"><span class="toc-number">1.</span> <span class="toc-text">node第五课</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#功能实现（主要技术点）"><span class="toc-number">1.0.0.1.</span> <span class="toc-text">功能实现（主要技术点）</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#ejs模板语法："><span class="toc-number">1.0.0.2.</span> <span class="toc-text">ejs模板语法：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#回流和重绘"><span class="toc-number">1.0.0.3.</span> <span class="toc-text">回流和重绘</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#数据缓存"><span class="toc-number">1.0.0.4.</span> <span class="toc-text">数据缓存</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#JS中正则加变量："><span class="toc-number">1.0.0.5.</span> <span class="toc-text">JS中正则加变量：</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#在mongodb中根据-id主键来查找数据"><span class="toc-number">1.0.0.6.</span> <span class="toc-text">在mongodb中根据_id主键来查找数据</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#CSS3动画复习"><span class="toc-number">1.0.0.7.</span> <span class="toc-text">CSS3动画复习</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#利用cookie来进行前后端数据交互"><span class="toc-number">1.0.0.8.</span> <span class="toc-text">利用cookie来进行前后端数据交互</span></a></li></ol></li></ol></li></ol></li></ol>
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="Hide Sidebar"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+
+  <div class="rsspart">
+	<a href="" target="_blank" title="rss">RSS</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<div class="social-font clearfix">
+		
+		
+		
+		
+		
+	</div>
+		<p class="copyright">Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/A-limon/pacman" target="_blank" title="Pacman">Pacman</a> © 2017 
+		
+		<a href="http://yoursite.com" target="_blank" title="John Doe">John Doe</a>
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.1.0.min.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else
+    {
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      h  = $('article h2')
+      ah = $('article h2'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  if(ah.length==0){
+    t.css('display','none');
+  }else{
+    c.click(function(){
+      ta.css('display', 'block').addClass('fadeIn');
+    });
+    o.click(function(){
+      ta.css('display', 'none');
+    });
+    $(window).scroll(function(){
+      ta.css("top",Math.max(140,320-$(this).scrollTop()));
+    });
+  };
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina');
+  var html = [
+  '<a href="#" class="overlay" id="qrcode"></a>',
+  '<div class="qrcode clearfix"><span>扫描二维码分享到微信朋友圈</span><a class="qrclose" href="#share"></a><strong>Loading...Please wait</strong><img id="qrcode-pic" data-src="http://s.jiathis.com/qrcode.php?url=' + encodedUrl + '"/></div>',
+  '<a href="#textlogo" class="article-back-to-top" title="Top"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="QRcode"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="Weibo"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+  $('.article-share-qrcode').click(function(){
+    var imgSrc = $('#qrcode-pic').attr('data-src');
+    $('#qrcode-pic').attr('src', imgSrc);
+    $('#qrcode-pic').load(function(){
+        $('.qrcode strong').text(' ');
+    });
+  });
+});     
+</script>
+
+
+
+
+
+
+  </body>
+</html>
