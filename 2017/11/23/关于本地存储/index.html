@@ -4,13 +4,14 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>关于Ajax缓存 | Hexo</title>
+    <title>关于本地存储 | Hexo</title>
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=3, minimum-scale=1">
     
     <meta name="author" content="John Doe">
     
-    <meta name="description" content="Ajax页面缓存是ajax处理数据时对一些重复相同数据进行一个缓存操作，这样从另一个层面对于我们来讲是非常的不错了，但有时我们并不希望它缓存要如何处理呢？下面我们一起来看看关于页面缓存问题分析与解决，希望例子对各位会带来帮助。
-一、什么是Ajax缓存原理？Ajax在发送的数据成功后，会把请求的URL">
+    <meta name="description" content="H5本地存储在以前，我们想要存储一些数据，并且只是在前端使用，服务端并不会使用，我们只能存在cookie里，但是cookie会跟随请求头在客户端和服务端之间来回传递，而且cookie还有一些缺点，H5提供了webStorage的API用来做客户端的数据存储
+cookie与webStorage的区别
+">
     
     
     
@@ -66,15 +67,15 @@
 		<header class="article-info clearfix">
   <h1 itemprop="name">
     
-      <a href="/2017/11/23/关于Ajax缓存/" title="关于Ajax缓存" itemprop="url">关于Ajax缓存</a>
+      <a href="/2017/11/23/关于本地存储/" title="关于本地存储" itemprop="url">关于本地存储</a>
   </h1>
   <p class="article-author">By
     
       <a href="http://yoursite.com" title="John Doe">John Doe</a>
     </p>
   <p class="article-time">
-    <time datetime="2017-11-23T09:09:58.000Z" itemprop="datePublished">2017-11-23</time>
-    Updated:<time datetime="2017-11-23T09:10:36.048Z" itemprop="dateModified">2017-11-23</time>
+    <time datetime="2017-11-23T09:13:34.000Z" itemprop="datePublished">2017-11-23</time>
+    Updated:<time datetime="2017-11-23T09:13:55.259Z" itemprop="dateModified">2017-11-23</time>
     
   </p>
 </header>
@@ -83,18 +84,33 @@
 		
 		<div id="toc" class="toc-article">
 			<strong class="toc-title">Contents</strong>
-		
+		<ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#H5本地存储"><span class="toc-number">1.</span> <span class="toc-text">H5本地存储</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#cookie与webStorage的区别"><span class="toc-number">1.0.1.</span> <span class="toc-text">cookie与webStorage的区别</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#webStorage包含的存储方式"><span class="toc-number">1.0.2.</span> <span class="toc-text">webStorage包含的存储方式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#localStorage和sessionStorage-的使用方法（API）"><span class="toc-number">1.0.3.</span> <span class="toc-text">localStorage和sessionStorage 的使用方法（API）</span></a></li></ol></li></ol></li></ol>
 		</div>
 		
-		<p>Ajax页面缓存是ajax处理数据时对一些重复相同数据进行一个缓存操作，这样从另一个层面对于我们来讲是非常的不错了，但有时我们并不希望它缓存要如何处理呢？下面我们一起来看看关于页面缓存问题分析与解决，希望例子对各位会带来帮助。</p>
-<p>一、什么是Ajax缓存原理？<br>Ajax在发送的数据成功后，会把请求的URL和返回的响应结果保存在缓存内，当下一次调用Ajax发送相同的请求时，它会直接从缓存中把数据取出来，这是为了提高页面的响应速度和用户体验。当前这要求两次请求URL完全相同，包括参数。这个时候，浏览器就不会与服务器交互。<br>二、Ajax缓存的好处<br>这种设计使客户端对一些静态页面内容的请求，比如图片，css文件，js脚本等，变得更加快捷，提高了页面的响应速度，也节省了网络通信资源。</p>
-<p>三、Ajax缓存的不足<br>Ajax缓存虽然有上述的好处，但是如果通过Ajax对一些后台数据进行更改的时候，虽然数据在后台已经发生改变，但是页面缓存中并没有改变，对于相同的URL，Ajax提交过去以后，浏览器还只是简单的从缓存中拿数据，这种情况当然就不行了。</p>
-<p>四、解决Ajax缓存问题的方法<br>解决这个问题最有效的办法是禁止页面缓存，有以下几种处理方法：<br>1、在ajax发送请求前加上 xmlHttpRequest.setRequestHeader(“Cache-Control”,”no-cache”);<br>2、在服务端加 header(“Cache-Control: no-cache, must-revalidate”);<br>3、在ajax发送请求前加上 xmlHttpRequest.setRequestHeader(“If-Modified-Since”,”0″);<br>4、在 Ajax 的 URL 参数后加上 “?fresh=” + Math.random(); //当然这里参数 fresh 可以任意取了<br>5、第五种方法和第四种类似，在 URL 参数后加上 “?timestamp=” + new Date().getTime();<br>6、用POST替代GET：不推荐<br>7、jQuery提供一个防止ajax使用缓存的方法：</p>
-<p><script type="text/javascript" language="javascript"><br>     $.ajaxSetup ({<br>           cache: false //close AJAX cache<br>      });<br></script><br>8、修改load 加载的url地址，如在url 多加个时间参数就可以：<br>function loadEventInfoPage(eventId){<br>    $.ajaxSetup ({<br>       cache: true // AJAX cache  下面加上时间后load的页面中的js、css图片等都会重新加载，<br>         //加上这句action会重新加载，但是js、css、图片等会走缓存<br>    });<br>    $(“#showEventInfo”).load(ctx + “/custEvents/viewEvent.action”,  {“complaint.Id”:eventId, “tt”:(new Date()).getTime()},function(){})<br>}</p>
-<p>9、设置html的缓存</p>
-<p><meta http-equiv="Pragma" content="no-cache">   </p>
-<p><meta http-equiv="Cache-Control" content="no-cache">   </p>
-<meta http-equiv="Expires" content="0">
+		<h3 id="H5本地存储"><a href="#H5本地存储" class="headerlink" title="H5本地存储"></a>H5本地存储</h3><p>在以前，我们想要存储一些数据，并且只是在前端使用，服务端并不会使用，我们只能存在cookie里，但是cookie会跟随请求头在客户端和服务端之间来回传递，而且cookie还有一些缺点，H5提供了webStorage的API用来做客户端的数据存储</p>
+<h5 id="cookie与webStorage的区别"><a href="#cookie与webStorage的区别" class="headerlink" title="cookie与webStorage的区别"></a>cookie与webStorage的区别</h5><ol>
+<li>cookie有大小的限制，只能存储4kb，webStorage可以存储5Mb，cookie还有条数的限制</li>
+<li>cookie会跟随请求头在客户端和服务端之间传递，会影响带宽。</li>
+<li>cookie需要设置有效期，localStorage是永久保存，sessionStorage是会话保存，</li>
+<li>cookie可以设置作用path</li>
+<li>cookie的操作较为困难，webStorage的API较为容易</li>
+<li>cookie的兼容性比webStorage兼容性好</li>
+</ol>
+<h5 id="webStorage包含的存储方式"><a href="#webStorage包含的存储方式" class="headerlink" title="webStorage包含的存储方式"></a>webStorage包含的存储方式</h5><ol>
+<li>localStorage ：有效期是永远，永久保存；除非手动删除</li>
+<li>sessionStorage： 有效期是一次会话时间</li>
+<li>globalStorage、indexedDB、webSQL因为兼容性、实用性较差，所以，不使用</li>
+</ol>
+<h5 id="localStorage和sessionStorage-的使用方法（API）"><a href="#localStorage和sessionStorage-的使用方法（API）" class="headerlink" title="localStorage和sessionStorage 的使用方法（API）"></a>localStorage和sessionStorage 的使用方法（API）</h5><ol>
+<li><p>localStorage和sessionStorage的使用方法一样</p>
+</li>
+<li><p>增删改查</p>
+</li>
+</ol>
+<p>增/改： localStorage.setItem(key,value)/ localStorage.a = 1</p>
+<p>查： length；key方法（index）得到对应的key getItem(key)/localStorage.a</p>
+<p>删： removeItem（key）</p>
+<p>清空: clear()</p>
   
 	</div>
 		<footer class="article-footer clearfix">
@@ -104,7 +120,7 @@
 
 <div class="article-share" id="share">
 
-  <div data-url="http://yoursite.com/2017/11/23/关于Ajax缓存/" data-title="关于Ajax缓存 | Hexo" data-tsina="" class="share clearfix">
+  <div data-url="http://yoursite.com/2017/11/23/关于本地存储/" data-title="关于本地存储 | Hexo" data-tsina="" class="share clearfix">
   </div>
 
 </div>
@@ -113,19 +129,11 @@
 	
 <nav class="article-nav clearfix">
  
- <div class="prev" >
- <a href="/2017/11/23/关于本地存储/" title="关于本地存储">
-  <strong>PREVIOUS:</strong><br/>
-  <span>
-  关于本地存储</span>
-</a>
-</div>
-
 
 <div class="next">
-<a href="/2017/11/22/node4/"  title="node4">
+<a href="/2017/11/23/关于Ajax缓存/"  title="关于Ajax缓存">
  <strong>NEXT:</strong><br/> 
- <span>node4
+ <span>关于Ajax缓存
 </span>
 </a>
 </div>
@@ -138,7 +146,7 @@
 
   <div id="toc" class="toc-aside">
   <strong class="toc-title">Contents</strong>
-  
+  <ol class="toc"><li class="toc-item toc-level-3"><a class="toc-link" href="#H5本地存储"><span class="toc-number">1.</span> <span class="toc-text">H5本地存储</span></a><ol class="toc-child"><li class="toc-item toc-level-5"><a class="toc-link" href="#cookie与webStorage的区别"><span class="toc-number">1.0.1.</span> <span class="toc-text">cookie与webStorage的区别</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#webStorage包含的存储方式"><span class="toc-number">1.0.2.</span> <span class="toc-text">webStorage包含的存储方式</span></a></li><li class="toc-item toc-level-5"><a class="toc-link" href="#localStorage和sessionStorage-的使用方法（API）"><span class="toc-number">1.0.3.</span> <span class="toc-text">localStorage和sessionStorage 的使用方法（API）</span></a></li></ol></li></ol></li></ol>
   </div>
 
 <div id="asidepart">
